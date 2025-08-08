@@ -1,0 +1,102 @@
+/* Header box untuk H1 */
+header {
+    display: flex;
+    justify-content: center;
+    padding: 20px;
+    background: transparent; /* transparan, biar box h1 yang dominan */
+}
+
+header h1 {
+    background-color: white; /* warna kotak */
+    color: black;
+    padding: 15px 30px;
+    border-radius: 12px; /* sudut tidak terlalu tajam */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* bayangan kotak */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3); /* bayangan teks */
+    font-size: 28px;
+    font-weight: bold;
+}
+
+
+body {
+  background-color: #ffc83d;
+  font-family: Arial, Helvetica, sans-serif;
+  margin: 0;
+  padding: 0;}
+
+  .todo-form {
+    background-color: white;
+    max-width: 500px;
+    margin: 20px auto; /* tengah secara horizontal */
+    padding: 20px;
+    border-radius: 10px; /* sudut melengkung */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* efek bayangan */
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* jarak antar elemen */
+    justify-content: center;
+}
+
+/* Input dan button di form */
+.todo-form input,
+.todo-form button {
+    padding: 8px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+}
+
+.todo-form button {
+    background-color: orange;
+    color: black;
+    border: none;
+    cursor: pointer;
+}
+
+.todo-form button:hover {
+    background-color: darkorange;
+    color: white;
+}
+
+/* Table */
+table {
+    border-collapse: collapse;
+    margin: 20px auto;
+    width: 90%;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+th, td {
+    padding: 12px;
+    text-align: center;
+    border: 1px solid #ddd;
+}
+
+th {
+    background-color: #f4b400;
+    color: black;
+}
+
+td.status {
+    font-weight: bold;
+}
+
+.delete-btn, .done-btn {
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.delete-btn {
+    background-color: red;
+    color: white;
+}
+
+.done-btn {
+    background-color: green;
+    color: white;
+}
