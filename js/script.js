@@ -7,6 +7,23 @@ const filterButton = document.getElementById("filter-button");
 const clearButton = document.getElementById("clear-button");
 const todoList = document.getElementById("todo-table-body");
 
+// Array untuk menyimpan tasks
+let tasks = [];
+
+// Fungsi untuk menyimpan tasks ke localStorage
+function saveTasks() {
+    localStorage.setItem("todoTasks", JSON.stringify(tasks));
+}
+
+// Fungsi untuk memuat tasks dari localStorage
+function loadTasks() {
+    const savedTasks = localStorage.getItem("todoTasks");
+    if (savedTasks) {
+        tasks = JSON.parse(savedTasks);
+        renderTasks();
+    }
+}
+
 // Fungsi menampilkan pesan No task found
 function showNoTaskMessage() {
     todoList.innerHTML = `<tr><td colspan="4" style="text-align:center">No task found</td></tr>`;
@@ -25,6 +42,49 @@ function validateInput() {
     return true;
 }
 
+// Fungsi render/tampilkan semua tasks
+function renderTasks() {
+    todoList.innerHTML = "";
+
+    if (tasks.length === 0) {
+        showNoTaskMessage();
+        return;
+    }
+
+    tasks.forEach((task, index) => {
+        const row = document.createElement("tr");
+        row.innerHTML = `
+            <td>${task.name}</td>
+            <td>${task.date}</td>
+            <td class="status" style="color: ${task.status === 'Completed' ? 'green' : 'black'}">${task.status}</td>
+            <td>
+                <button class="done-btn" data-index="${index}">Done</button>
+                <button class="delete-btn" data-index="${index}">Delete</button>
+            </td>
+        `;
+
+        // Event tombol Done
+        row.querySelector(".done-btn").addEventListener("click", () => {
+            if (tasks[index].status === 'Pending') {
+                tasks[index].status = 'Completed';
+            } else {
+                tasks[index].status = 'Pending';
+            }
+            saveTasks();
+            renderTasks();
+        });
+
+        // Event tombol Delete
+        row.querySelector(".delete-btn").addEventListener("click", () => {
+            tasks.splice(index, 1);
+            saveTasks();
+            renderTasks();
+        });
+
+        todoList.appendChild(row);
+    });
+}
+
 // Fungsi menambah task
 function addTask() {
     if (!validateInput()) return;
@@ -32,43 +92,22 @@ function addTask() {
     const task = taskInput.value.trim();
     const date = dateInput.value;
 
-    const row = document.createElement("tr");
+    // Tambah task ke array
+    tasks.push({
+        name: task,
+        date: date,
+        status: 'Pending'
+    });
 
-    row.innerHTML = `
-        <td>${task}</td>
-        <td>${date}</td>
-        <td class="status">Pending</td>
-        <td>
-            <button class="done-btn">Done</button>
-            <button class="delete-btn">Delete</button>
-        </td>
-    `;
+    // Simpan ke localStorage
+    saveTasks();
 
-    // Hapus pesan "No task found" jika ada
-    if (todoList.children.length === 1 && todoList.children[0].querySelector("td[colspan]")) {
-        todoList.innerHTML = "";
-    }
-
-    todoList.appendChild(row);
+    // Render ulang tasks
+    renderTasks();
 
     // Reset input
     taskInput.value = "";
     dateInput.value = "";
-
-    // Event tombol Done
-    row.querySelector(".done-btn").addEventListener("click", () => {
-        const statusCell = row.querySelector(".status");
-        statusCell.textContent = "Completed";
-        statusCell.style.color = "green";
-    });
-
-    // Event tombol Delete
-    row.querySelector(".delete-btn").addEventListener("click", () => {
-        row.remove();
-        if (todoList.children.length === 0) {
-            showNoTaskMessage();
-        }
-    });
 }
 
 // Fungsi filter task
@@ -97,6 +136,23 @@ function filterTasks() {
         showNoTaskMessage();
     }
 }
+
+// Event Listeners
+addButton.addEventListener("click", addTask);
+filterButton.addEventListener("click", filterTasks);
+
+// Event listener untuk Clear All button
+clearButton.addEventListener("click", () => {
+    if (confirm("Apakah Anda yakin ingin menghapus semua task?")) {
+        tasks = [];
+        saveTasks();
+        renderTasks();
+        filterInput.value = "";
+    }
+});
+
+// Muat tasks saat halaman dimuat
+window.addEventListener("DOMContentLoaded", loadTasks);
 
 // Fungsi hapus semua task
 function clearAllTasks() {
